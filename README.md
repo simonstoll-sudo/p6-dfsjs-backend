@@ -31,7 +31,6 @@ Before you begin, ensure you have installed:
 - **Node.js** 22.x or higher ([Download](https://nodejs.org/))
 - **npm** 10.x or higher (included with Node.js)
 - **MongoDB** 7.x or higher ([Download](https://www.mongodb.com/try/download/community))
-  - OR **Docker** and **Docker Compose** ([Download](https://www.docker.com/products/docker-desktop/))
 
 ## Getting Started
 
@@ -63,27 +62,22 @@ NODE_ENV=development
 
 ### Running the Application
 
-#### Option 1: With Docker (Recommended)
+**Important**: Ensure MongoDB is running locally before starting the application.
 
-The easiest way to run the application with MongoDB:
-
+**Start MongoDB**:
 ```bash
-# Start all services (API + MongoDB)
-docker compose up -d
+# macOS (with Homebrew)
+brew services start mongodb-community
 
-# View logs
-docker compose logs -f api
+# Linux
+sudo systemctl start mongod
 
-# Stop services
-docker compose down
+# Windows
+# Start MongoDB service from Services panel
+# Or run: net start MongoDB
 ```
 
-The API will be available at `http://localhost:3000`
-
-#### Option 2: Local Development
-
-Ensure MongoDB is running locally, then:
-
+**Run the application**:
 ```bash
 # Development mode with auto-reload
 npm run dev
@@ -139,8 +133,6 @@ p6-dfsjs-backend/
 │   ├── workshops.test.js           # Workshop API integration tests
 │   └── notions.test.js             # Notion API integration tests
 ├── package.json                    # Project dependencies and scripts
-├── Dockerfile                      # Docker image configuration
-├── docker-compose.yml              # Multi-container orchestration
 ├── .env.example                    # Environment variables template
 ├── .gitignore                      # Git ignore rules
 └── README.md                       # This file
@@ -209,40 +201,6 @@ The test suite includes integration tests for all API endpoints, covering:
 
 **Coverage target:** >70% for statements, branches, and functions
 
-## Docker
-
-### Build Docker Image
-
-```bash
-docker build -t p6-dfsjs-backend .
-```
-
-### Run with Docker Compose
-
-The `docker-compose.yml` file orchestrates two services:
-1. **MongoDB** - Database with health checks and volume persistence
-2. **API** - Express application that depends on MongoDB
-
-```bash
-# Start services
-docker compose up -d
-
-# View logs
-docker compose logs -f
-
-# Stop services
-docker compose down
-
-# Remove volumes (reset database)
-docker compose down -v
-```
-
-**Key Docker features:**
-- Health checks ensure MongoDB is ready before starting the API
-- Volume persistence for database data
-- Environment variables for configuration
-- Automatic service dependency management
-
 ## Architecture
 
 This application follows the **MVC (Model-View-Controller)** pattern with a service layer:
@@ -306,12 +264,14 @@ To add a new resource (e.g., "users"):
 
 **Solution:** Ensure MongoDB is running:
 ```bash
-# If using Docker
-docker compose up -d mongodb
+# macOS (with Homebrew)
+brew services start mongodb-community
 
-# If using local MongoDB
-brew services start mongodb-community  # macOS
-sudo systemctl start mongod            # Linux
+# Linux
+sudo systemctl start mongod
+
+# Windows
+net start MongoDB
 ```
 
 ### Port Already in Use
